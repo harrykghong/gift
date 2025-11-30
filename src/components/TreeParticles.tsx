@@ -26,6 +26,7 @@ const TreeParticleMaterial = shaderMaterial(
     attribute vec3 color;
     
     varying vec3 vColor;
+    varying vec3 vPosition;
 
     // Simplex noise function
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -90,6 +91,8 @@ const TreeParticleMaterial = shaderMaterial(
             pos += noise * uDisperse * 2.0;
         }
 
+        vPosition = pos; // Pass to fragment shader
+
         vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
         gl_PointSize = size * (300.0 / -mvPosition.z);
         gl_Position = projectionMatrix * mvPosition;
@@ -98,6 +101,8 @@ const TreeParticleMaterial = shaderMaterial(
     // Fragment Shader
     `
     varying vec3 vColor;
+    varying vec3 vPosition; // Pass position for random seed
+    uniform float uTime;
 
     void main() {
         // Circular particle
@@ -108,7 +113,13 @@ const TreeParticleMaterial = shaderMaterial(
         float strength = 1.0 - (r * 2.0);
         strength = pow(strength, 1.5);
         
-        gl_FragColor = vec4(vColor, strength);
+        // Twinkle effect
+        // Use position as random seed for twinkle phase
+        float twinkle = sin(uTime * 2.0 + vPosition.x * 10.0 + vPosition.y * 20.0) * 0.5 + 0.5;
+        // Mix between base color and brighter version
+        vec3 finalColor = mix(vColor, vColor * 1.5, twinkle);
+        
+        gl_FragColor = vec4(finalColor, strength);
     }
     `
 )

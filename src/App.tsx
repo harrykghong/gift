@@ -29,12 +29,12 @@ function App() {
           {/* Visual Indicator */}
           <div
             className="absolute bottom-0 left-0 w-full bg-christmas-gold rounded-full transition-all duration-75"
-            style={{ height: `${disperse * 100}% ` }}
+            style={{ height: `${disperse * 100}%` }}
           />
           {/* Thumb */}
           <div
             className="absolute left-1/2 -translate-x-1/2 w-6 h-6 bg-white rounded-full shadow-lg pointer-events-none transition-all duration-75"
-            style={{ bottom: `calc(${disperse * 100} % - 12px)` }}
+            style={{ bottom: `calc(${disperse * 100}% - 12px)` }}
           />
         </div>
         <span className="text-white/80 text-xs font-mono">DISPERSE</span>
